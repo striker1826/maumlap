@@ -1,14 +1,14 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { CreateMemberInput } from 'src/graphql';
+import { CreateMemberDto } from './dto/create-member.dto';
 import { MemberRepository } from './member.repository';
 
 @Injectable()
 export class MemberService {
   constructor(private readonly memberRepository: MemberRepository) {}
 
-  async createMember(createMemberInput: CreateMemberInput) {
-    const { email, password, name } = createMemberInput;
+  async createMember(createMemberDto: CreateMemberDto) {
+    const { email, password, name } = createMemberDto;
 
     // 이메일이 존재하는지 확인 후 존재한다면 에러 메세지를 반환
     const isExistEmail = await this.memberRepository.existByEmail(email);

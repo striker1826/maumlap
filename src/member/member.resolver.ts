@@ -1,25 +1,19 @@
-import { Resolver, Mutation, Args } from '@nestjs/graphql';
-import { CreateMemberInput, UpdateMemberInput } from 'src/graphql';
+import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
+import { CreateMemberDto } from './dto/create-member.dto';
+import { Member } from './entities/member.entity';
 import { MemberService } from './member.service';
 
-@Resolver('Member')
+@Resolver(() => Member)
 export class MemberResolver {
   constructor(private readonly memberService: MemberService) {}
 
-  @Mutation('createMember')
-  createMember(
-    @Args('createMemberInput') createMemberInput: CreateMemberInput,
-  ) {
-    return this.memberService.createMember(createMemberInput);
+  @Query(() => Boolean)
+  users(@Args('bool') bool: boolean): boolean {
+    return bool;
   }
 
-  // @Mutation('updateMember')
-  // update(@Args('updateMemberInput') updateMemberInput: UpdateMemberInput) {
-  //   return this.memberService.update(updateMemberInput.id, updateMemberInput);
-  // }
-
-  // @Mutation('removeMember')
-  // remove(@Args('id') id: number) {
-  //   return this.memberService.remove(id);
-  // }
+  @Mutation(() => Member, { name: 'createMember' })
+  createMember(@Args('createMemberDto') createMemberDto: CreateMemberDto) {
+    return this.memberService.createMember(createMemberDto);
+  }
 }

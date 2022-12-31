@@ -23,7 +23,7 @@ type Query {
 }
 
 type Mutation {
-  createMember(createMemberInput: CreateMemberInput!): Member!
+  createMember(createMemberDto: CreateMemberDto!): Member!
   updateMember(updateMemberInput: UpdateMemberInput!): Member!
   removeMember(id: Int!): Member
 }
