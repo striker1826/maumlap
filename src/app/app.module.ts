@@ -1,20 +1,24 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { MembersModule } from 'src/members/members.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Member } from 'src/entities/members.entity';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-
+import { Member } from 'src/graphql';
+import { MemberModule } from 'src/member/member.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
+      playground: false,
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      typePaths: ['./**/*.graphql'],
+      definitions: {
+        path: join(process.cwd(), 'src/types/graphql.ts'),
+        outputAs: 'class',
+      },
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -27,7 +31,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
       entities: [Member],
       synchronize: true,
     }),
-    MembersModule,
+    MemberModule,
   ],
   controllers: [AppController],
   providers: [AppService],
