@@ -2,7 +2,6 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { LoginMemberDto } from 'src/member/dto/login-member.dto';
 import { MemberRepository } from 'src/member/member.repository';
 import * as bcrypt from 'bcrypt';
-import { Payload } from './jwt/jwt.payload';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -12,17 +11,18 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
+  // 로그인
   async loginMember(loginMemberDto: LoginMemberDto) {
     const { email, password } = loginMemberDto;
-
-    // 해당 이메일의 계정이 존재하는지 확인 후 없다면 에러 메세지를 반환
-    const isExistMember = await this.memberRepository.existByEmail(email);
-    if (!isExistMember) {
+    // 해당 이메일의 계정이 존재한다면 가져오고 없다면 에러 메세지를 반환
+    const findMemberByEmail = await this.memberRepository.findMemberByEmail(
+      email,
+    );
+    if (!findMemberByEmail) {
       throw new UnauthorizedException('이메일 혹은 비밀번호를 확인해주세요');
     }
-
     // 비밀번호가 일치하는지 확인 후 불일치라면 에러 메세지를 반환
-    const findpassword = isExistMember.password;
+    const findpassword = findMemberByEmail.password;
     const isPasswordValidated: boolean = await bcrypt.compare(
       password,
       findpassword,
@@ -30,15 +30,23 @@ export class AuthService {
     if (isPasswordValidated !== true) {
       throw new UnauthorizedException('이메일 혹은 비밀번호를 확인해주세요');
     }
-
-    const payload: Payload = {
-      sub: isExistMember.id,
-      email: isExistMember.email,
-      name: isExistMember.name,
+    // payload 설정과 access_token, refresh_token 발급
+    const payload = {
+      sub: findMemberByEmail.id,
+      email: findMemberByEmail.email,
+      name: findMemberByEmail.name,
     };
-
-    const access_token = this.jwtService.sign(payload);
-    const refresh_token = this.jwtService.sign({});
+    const access_token = this.jwtService.sign(payload, {
+      secret: process.env.SECRET_KEY,
+      expiresIn: '2h',
+    });
+    const refresh_token = this.jwtService.sign(
+      {},
+      {
+        secret: process.env.SECRET_KEY,
+        expiresIn: '12h',
+      },
+    );
 
     return {
       access_token: `Bearer ${access_token}`,

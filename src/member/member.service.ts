@@ -1,12 +1,14 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { CreateMemberDto } from './dto/create-member.dto';
+import { UpdateMemberDto } from './dto/update-member.dto';
 import { MemberRepository } from './member.repository';
 
 @Injectable()
 export class MemberService {
   constructor(private readonly memberRepository: MemberRepository) {}
 
+  // 회원가입
   async createMember(createMemberDto: CreateMemberDto) {
     const { email, password, name } = createMemberDto;
 
@@ -26,5 +28,18 @@ export class MemberService {
       hashedPassword,
       name,
     );
+  }
+
+  // 회원정보 수정
+  async updateMember(id: number, updateMemberDto: UpdateMemberDto) {
+    const { password, name } = updateMemberDto;
+
+    // 비밀번호 암호화
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // 정보 수정
+    await this.memberRepository.updateMember(id, hashedPassword, name);
+    return;
   }
 }

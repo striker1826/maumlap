@@ -13,15 +13,45 @@ export class MemberRepository {
   ) {}
 
   async existByEmail(email: string) {
-    return await this.memberRepository.findOne({ where: { email } });
+    return await this.memberRepository.exist({ where: { email } });
+  }
+
+  async findMemberByEmail(email: string) {
+    const findByMember = await this.memberRepository.findOne({
+      where: { email },
+    });
+    console.log(findByMember);
+    return findByMember;
   }
 
   async createMember(email: string, password: string, name: string) {
-    const newMember = await this.memberRepository.create({
+    const newMember = this.memberRepository.create({
       email,
       password,
       name,
     });
     return await this.memberRepository.save(newMember);
+  }
+
+  async findMemberById(memberId: number) {
+    const { id, email, name } = await this.memberRepository.findOneById(
+      memberId,
+    );
+    return {
+      id,
+      email,
+      name,
+    };
+  }
+
+  async updateMember(id: number, password, name) {
+    console.log(name);
+    const updatedMember = await this.memberRepository
+      .createQueryBuilder()
+      .update(Member)
+      .set({ name: name, password: password })
+      .where('id=:id', { id })
+      .execute();
+    return updatedMember;
   }
 }
