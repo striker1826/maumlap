@@ -10,7 +10,7 @@ type Member {
 }
 
 type Query {
-  users(bool: Boolean!): Boolean!
+  users: String!
 }
 
 type Mutation {

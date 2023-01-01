@@ -7,9 +7,9 @@ import { MemberService } from './member.service';
 export class MemberResolver {
   constructor(private readonly memberService: MemberService) {}
 
-  @Query(() => Boolean)
-  users(@Args('bool') bool: boolean): boolean {
-    return bool;
+  @Query(() => String)
+  users(): string {
+    return 'hello';
   }
 
   @Mutation(() => Member, { name: 'createMember' })
