@@ -20,7 +20,6 @@ export class MemberRepository {
     const findByMember = await this.memberRepository.findOne({
       where: { email },
     });
-    console.log(findByMember);
     return findByMember;
   }
 
@@ -44,14 +43,16 @@ export class MemberRepository {
     };
   }
 
-  async updateMember(id: number, password, name) {
-    console.log(name);
-    const updatedMember = await this.memberRepository
-      .createQueryBuilder()
-      .update(Member)
-      .set({ name: name, password: password })
-      .where('id=:id', { id })
-      .execute();
+  async updateMember(id: number, password: string, name: string) {
+    const updatedMember = await this.memberRepository.save({
+      id,
+      password,
+      name,
+    });
     return updatedMember;
+  }
+
+  async deleteMember(id: number) {
+    await this.memberRepository.delete({ id });
   }
 }

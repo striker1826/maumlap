@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { CurrentMember } from 'src/common/decorators/member.decorators';
@@ -32,7 +40,13 @@ export class MemberController {
     @Body() updateMemberDto: UpdateMemberDto,
   ) {
     await this.memberService.updateMember(member.id, updateMemberDto);
-
     return '회원 정보가 변경되었습니다';
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete()
+  async deleteMember(@CurrentMember() member) {
+    await this.memberService.deleteMember(member.id);
+    return '회원탈퇴가 완료되었습니다';
   }
 }

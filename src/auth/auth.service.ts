@@ -14,6 +14,7 @@ export class AuthService {
   // 로그인
   async loginMember(loginMemberDto: LoginMemberDto) {
     const { email, password } = loginMemberDto;
+
     // 해당 이메일의 계정이 존재한다면 가져오고 없다면 에러 메세지를 반환
     const findMemberByEmail = await this.memberRepository.findMemberByEmail(
       email,

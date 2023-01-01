@@ -23,11 +23,13 @@ export class MemberService {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // 계정 생성
-    return await this.memberRepository.createMember(
+    const newMember = await this.memberRepository.createMember(
       email,
       hashedPassword,
       name,
     );
+    console.log(newMember);
+    return newMember;
   }
 
   // 회원정보 수정
@@ -39,7 +41,11 @@ export class MemberService {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // 정보 수정
-    await this.memberRepository.updateMember(id, hashedPassword, name);
+    return await this.memberRepository.updateMember(id, hashedPassword, name);
+  }
+
+  async deleteMember(id: number) {
+    await this.memberRepository.deleteMember(id);
     return;
   }
 }
