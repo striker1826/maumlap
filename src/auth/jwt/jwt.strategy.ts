@@ -1,9 +1,10 @@
 /* eslint-disable prettier/prettier */
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Payload } from './jwt.payload';
 import { MemberRepository } from 'src/member/member.repository';
+import { GraphQLError } from 'graphql';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -16,11 +17,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: Payload) {
-    const member = await this.memberRepository.findMemberById(payload.sub);
-    if (member) {
+    try {
+      const member = await this.memberRepository.findMemberById(payload.sub);
       return member;
-    } else {
-      throw new UnauthorizedException('접근 오류');
+    } catch (err) {
+      throw new GraphQLError('로그인을 해주세요');
     }
   }
 }

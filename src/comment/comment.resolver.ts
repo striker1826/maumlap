@@ -36,7 +36,6 @@ export class CommentResolver {
   findRecommentsByCommentId(@Parent() comments: Comment) {
     Logger.verbose('trying to findRecommentsByCommentId');
     const { id } = comments;
-    console.log(id);
     return this.commentService.findCommentsByCommentId(id);
   }
 }

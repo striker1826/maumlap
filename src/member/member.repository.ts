@@ -53,6 +53,6 @@ export class MemberRepository {
   }
 
   async deleteMember(id: number) {
-    await this.memberRepository.delete({ id });
+    return await this.memberRepository.delete({ id });
   }
 }

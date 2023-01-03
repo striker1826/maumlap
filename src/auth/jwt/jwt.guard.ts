@@ -1,11 +1,8 @@
 /* eslint-disable prettier/prettier */
-import {
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { ExecutionContext, Injectable } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
+import { GraphQLError } from 'graphql';
 
 @Injectable()
 export class GqlAuthGuard extends AuthGuard('jwt') {
@@ -14,7 +11,7 @@ export class GqlAuthGuard extends AuthGuard('jwt') {
       const ctx = GqlExecutionContext.create(context);
       return ctx.getContext().req;
     } catch (err) {
-      throw new UnauthorizedException('접근 오류');
+      throw new GraphQLError('접근 오류');
     }
   }
 }

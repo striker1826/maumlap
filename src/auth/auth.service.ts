@@ -3,6 +3,7 @@ import { LoginMemberDto } from 'src/member/dto/login-member.dto';
 import { MemberRepository } from 'src/member/member.repository';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { GraphQLError } from 'graphql';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +21,7 @@ export class AuthService {
       email,
     );
     if (!findMemberByEmail) {
-      throw new UnauthorizedException('이메일 혹은 비밀번호를 확인해주세요');
+      throw new GraphQLError('이메일 혹은 비밀번호를 확인해주세요');
     }
     // 비밀번호가 일치하는지 확인 후 불일치라면 에러 메세지를 반환
     const findpassword = findMemberByEmail.password;
@@ -29,7 +30,7 @@ export class AuthService {
       findpassword,
     );
     if (isPasswordValidated !== true) {
-      throw new UnauthorizedException('이메일 혹은 비밀번호를 확인해주세요');
+      throw new GraphQLError('이메일 혹은 비밀번호를 확인해주세요');
     }
     // payload 설정과 access_token, refresh_token 발급
     const payload = {
