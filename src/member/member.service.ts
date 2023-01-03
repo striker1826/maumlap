@@ -1,9 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { GraphQLError } from 'graphql';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
 import { MemberRepository } from './member.repository';
-
 @Injectable()
 export class MemberService {
   constructor(private readonly memberRepository: MemberRepository) {}
@@ -15,7 +15,7 @@ export class MemberService {
     // 이메일이 존재하는지 확인 후 존재한다면 에러 메세지를 반환
     const isExistEmail = await this.memberRepository.existByEmail(email);
     if (isExistEmail) {
-      throw new UnauthorizedException('중복된 이메일이 존재합니다');
+      throw new GraphQLError('중복된 이메일이 존재합니다');
     }
 
     // 비밀번호 암호화
@@ -28,7 +28,6 @@ export class MemberService {
       hashedPassword,
       name,
     );
-    console.log(newMember);
     return newMember;
   }
 
@@ -45,7 +44,6 @@ export class MemberService {
   }
 
   async deleteMember(id: number) {
-    await this.memberRepository.deleteMember(id);
-    return;
+    return await this.memberRepository.deleteMember(id);
   }
 }

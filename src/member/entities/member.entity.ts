@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Post } from 'src/post/entities/post.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 @ObjectType()
@@ -20,4 +21,7 @@ export class Member {
   @Column()
   @Field(() => String)
   name: string;
+
+  @OneToMany(() => Post, (post) => post.member)
+  public post?: Post[];
 }

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NotFoundException } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -6,12 +6,24 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { MemberModule } from 'src/member/member.module';
 import { Member } from 'src/member/entities/member.entity';
 import { AuthModule } from './auth/auth.module';
+import { PostModule } from './post/post.module';
+import { CommentModule } from './comment/comment.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       autoSchemaFile: 'schema.sql',
       driver: ApolloDriver,
+      formatError: (error) => {
+        if (error.extensions.exception.code === '404')
+          throw new NotFoundException();
+        return {
+          message: error.message,
+          locations: error.locations,
+          path: error.path,
+        };
+      },
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -26,6 +38,8 @@ import { AuthModule } from './auth/auth.module';
     }),
     MemberModule,
     AuthModule,
+    PostModule,
+    CommentModule,
   ],
   controllers: [],
   providers: [],
