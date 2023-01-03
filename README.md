@@ -1,3 +1,7 @@
+## 로그인
+### localhost:4000/member/login 
+email, password 입력
+---
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
