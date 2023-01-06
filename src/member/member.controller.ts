@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
 import { GqlAuthGuard } from 'src/auth/jwt/jwt-access.guard';
+import { CurrentMember } from 'src/common/decorators/member.decorators';
 import { HttpExceptionFilter } from 'src/common/exceptions/http-exception.filter';
 import { LoginMemberDto } from './dto/login-member.dto';
 import { MemberService } from './member.service';
@@ -41,9 +42,9 @@ export class MemberController {
 
   @UseGuards(GqlAuthGuard)
   @Delete('/')
-  async deleteMember(@Param() id: number) {
+  async deleteMember(@CurrentMember() member) {
     Logger.verbose('trying to delete');
-    await this.memberService.deleteMember(id);
+    await this.memberService.deleteMember(member.id);
     return '회원탈퇴가 완료되었습니다';
   }
 }

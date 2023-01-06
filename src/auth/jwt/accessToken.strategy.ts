@@ -7,10 +7,7 @@ import { MemberRepository } from 'src/member/member.repository';
 import { GraphQLError } from 'graphql';
 
 @Injectable()
-export class AccessTokenStrategy extends PassportStrategy(
-  Strategy,
-  'jwt-access-token',
-) {
+export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(private memberRepository: MemberRepository) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
