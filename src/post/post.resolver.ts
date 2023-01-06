@@ -12,7 +12,7 @@ import { Post } from './entities/post.entity';
 import { CreatePostInput } from './dto/create-post.input';
 import { Logger, UseGuards } from '@nestjs/common';
 import { CurrentMember } from 'src/common/decorators/member.decorators';
-import { GqlAuthGuard } from 'src/auth/jwt/jwt.guard';
+import { GqlAuthGuard } from 'src/auth/jwt/jwt-access.guard';
 import { CommentService } from 'src/comment/comment.service';
 import { Comment } from 'src/comment/entities/comment.entity';
 

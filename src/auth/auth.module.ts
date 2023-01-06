@@ -4,7 +4,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { MemberModule } from 'src/member/member.module';
 import { AuthService } from './auth.service';
-import { JwtStrategy } from './jwt/jwt.strategy';
+import { AccessTokenStrategy } from './jwt/accessToken.strategy';
+import { RefreshTokenStrategy } from './jwt/refreshToken.strategy';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { JwtStrategy } from './jwt/jwt.strategy';
     JwtModule.register({ secret: process.env.SECRET_KEY }),
     forwardRef(() => MemberModule),
   ],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, AccessTokenStrategy, RefreshTokenStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}

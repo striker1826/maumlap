@@ -1,15 +1,18 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { LoginMemberDto } from 'src/member/dto/login-member.dto';
 import { MemberRepository } from 'src/member/member.repository';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { GraphQLError } from 'graphql';
+import { ConfigService } from '@nestjs/config';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly memberRepository: MemberRepository,
     private jwtService: JwtService,
+    private configService: ConfigService,
   ) {}
 
   // 로그인
@@ -42,12 +45,13 @@ export class AuthService {
       secret: process.env.SECRET_KEY,
       expiresIn: '2h',
     });
-    const refresh_token = this.jwtService.sign(
-      {},
-      {
-        secret: process.env.SECRET_KEY,
-        expiresIn: '12h',
-      },
+    const refresh_token = this.jwtService.sign(payload, {
+      secret: process.env.SECRET_KEY,
+      expiresIn: '24h',
+    });
+    await this.memberRepository.updateRefreshToken(
+      findMemberByEmail.id,
+      refresh_token,
     );
 
     return {
@@ -55,4 +59,22 @@ export class AuthService {
       refresh_token: `Bearer ${refresh_token}`,
     };
   }
+
+  // async refresh(refresh_token: string) {
+  //   const payload = jwt.verify(refresh_token, process.env.SECRET_KEY);
+  //   console.log(payload);
+
+  //   const access_token = this.jwtService.sign(payload, {
+  //     secret: this.configService.get<string>(process.env.SECRET_KEY),
+  //     expiresIn: '2h',
+  //   });
+  //   // const refresh_token = this.jwtService.sign(payload, {
+  //   //   secret: this.configService.get<string>(process.env.SECRET_KEY),
+  //   //   expiresIn: '24h',
+  //   // });
+  //   return {
+  //     access_token: `Bearer ${access_token}`,
+  //     refresh_token: `Bearer ${refresh_token}`,
+  // };
+  // }
 }

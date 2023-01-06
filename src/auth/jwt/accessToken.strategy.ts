@@ -7,7 +7,10 @@ import { MemberRepository } from 'src/member/member.repository';
 import { GraphQLError } from 'graphql';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class AccessTokenStrategy extends PassportStrategy(
+  Strategy,
+  'jwt-access-token',
+) {
   constructor(private memberRepository: MemberRepository) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -18,6 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: Payload) {
     try {
+      console.log(payload);
       const member = await this.memberRepository.findMemberById(payload.sub);
       return member;
     } catch (err) {

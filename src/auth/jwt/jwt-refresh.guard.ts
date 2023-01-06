@@ -5,7 +5,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { GraphQLError } from 'graphql';
 
 @Injectable()
-export class GqlAuthGuard extends AuthGuard('jwt') {
+export class GqlRefreshAuthGuard extends AuthGuard('jwt-refresh-token') {
   getRequest(context: ExecutionContext) {
     try {
       const ctx = GqlExecutionContext.create(context);

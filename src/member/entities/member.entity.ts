@@ -22,6 +22,10 @@ export class Member {
   @Field(() => String)
   name: string;
 
+  @Column({ nullable: true })
+  @Field(() => String, { nullable: true })
+  refresh_token?: string;
+
   @OneToMany(() => Post, (post) => post.member)
   public post?: Post[];
 }

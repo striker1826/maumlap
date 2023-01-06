@@ -56,6 +56,7 @@ type Member {
   email: String!
   password: String!
   name: String!
+  refresh_token: String
 }
 
 type Query {

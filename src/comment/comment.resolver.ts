@@ -9,7 +9,7 @@ import { CommentService } from './comment.service';
 import { Comment } from './entities/comment.entity';
 import { CreateCommentInput } from './dto/create-comment.input';
 import { Logger, UseGuards } from '@nestjs/common';
-import { GqlAuthGuard } from 'src/auth/jwt/jwt.guard';
+import { GqlAuthGuard } from 'src/auth/jwt/jwt-access.guard';
 import { CurrentMember } from 'src/common/decorators/member.decorators';
 
 @Resolver(() => Comment)

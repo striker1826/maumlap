@@ -1,8 +1,7 @@
 import { Logger, UseGuards } from '@nestjs/common';
 import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
-import { GraphQLError } from 'graphql';
 import { AuthService } from 'src/auth/auth.service';
-import { GqlAuthGuard } from 'src/auth/jwt/jwt.guard';
+import { GqlAuthGuard } from 'src/auth/jwt/jwt-access.guard';
 import { CurrentMember } from 'src/common/decorators/member.decorators';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';

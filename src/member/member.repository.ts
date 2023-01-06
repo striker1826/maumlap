@@ -43,6 +43,10 @@ export class MemberRepository {
     };
   }
 
+  async updateRefreshToken(id: number, refresh_token: string) {
+    await this.memberRepository.update(id, { refresh_token });
+  }
+
   async updateMember(id: number, password: string, name: string) {
     const updatedMember = await this.memberRepository.save({
       id,
